@@ -1,4 +1,4 @@
-package neetcode;
+package arraysAndHashing;
 
 public class ContainsDuplicate {
 	
