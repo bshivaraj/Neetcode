@@ -1,6 +1,6 @@
 package leetcode;
 
-public class ByeAndSellStock1 {
+public class BuyAndSellStock1 {
 	
 	public static void main(String[] args) {
 		int array[]= {3,6,4,8,7,2,5};
