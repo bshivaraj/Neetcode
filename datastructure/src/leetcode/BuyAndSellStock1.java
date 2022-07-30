@@ -3,7 +3,7 @@ package leetcode;
 public class BuyAndSellStock1 {
 	
 	public static void main(String[] args) {
-		int array[]= {3,6,4,8,7,2,5};
+		int array[]= {5,2,6,1,4};
 		System.out.println(getResult(array));
 	}
 
