@@ -10,14 +10,9 @@ public class ByeAndSellStock1 {
 	private static int getResult(int[] array) {
 		int min=Integer.MAX_VALUE,max=Integer.MIN_VALUE;
 		for(int i=0;i<array.length;i++) {
-			if(array[i]<min) {
-				min=array[i];
-			}
-			if(array[i]-min>max) {
-				max=array[i]-min;
-			}
+				min=Math.min(array[i], min);
+				max=Math.max(array[i]-min, max);
 		}
 		return max;
 	}
-
 }
