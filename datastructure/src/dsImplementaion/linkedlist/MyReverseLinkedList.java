@@ -10,6 +10,7 @@ public class MyReverseLinkedList {
         myLinkedList.add("Shiva");
         //getting from list
         myLinkedList.getAllData();
+        myLinkedList.reverseList();
 	}
 
 }
