@@ -1,3 +1,4 @@
+package hackerrank;
 public class UniqueCharter {
 	
 	public static void main(String[] args) {

@@ -1,5 +1,4 @@
-package LinkedList;
-import LinkedList.*;
+package hackerrank;
 
 public class ReverseLinkedList {
 	

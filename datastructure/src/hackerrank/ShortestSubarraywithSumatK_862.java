@@ -1,5 +1,4 @@
-package leetcode;
-
+package hackerrank;
 import java.util.ArrayDeque;
 import java.util.Deque;
 

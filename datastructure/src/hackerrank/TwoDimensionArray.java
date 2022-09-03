@@ -1,5 +1,4 @@
-package Arrays;
-
+package hackerrank;
 import java.util.Arrays;
 
 public class TwoDimensionArray {

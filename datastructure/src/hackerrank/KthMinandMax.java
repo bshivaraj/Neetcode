@@ -1,4 +1,4 @@
-package Arrays;
+package hackerrank;
 
 import java.util.Collections;
 import java.util.PriorityQueue;

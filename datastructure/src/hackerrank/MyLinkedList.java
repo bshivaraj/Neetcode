@@ -1,4 +1,4 @@
-package LinkedList;
+package hackerrank;
 
 import java.util.Date;
 

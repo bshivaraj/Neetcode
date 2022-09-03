@@ -1,4 +1,4 @@
-package leetcode;
+package hackerrank;
 
 import java.util.Arrays;
 

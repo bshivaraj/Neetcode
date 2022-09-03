@@ -1,3 +1,4 @@
+package hackerrank;
 public class SetOfSubString {
 	
 	public static void main(String[] args) {

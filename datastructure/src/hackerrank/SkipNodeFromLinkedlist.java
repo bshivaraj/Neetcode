@@ -1,5 +1,4 @@
-package LinkedList;
-
+package hackerrank;
 public class SkipNodeFromLinkedlist {
 	
 	public static void main(String[] args) {
