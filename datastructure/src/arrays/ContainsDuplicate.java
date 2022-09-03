@@ -3,6 +3,7 @@ package arrays;
 public class ContainsDuplicate {
 	
 	public static void main(String[] args) {
+		//hello
 	     int nums[] = {1,2,3,4,-1};
 		System.out.println(containsDuplicate(nums));
 	}
