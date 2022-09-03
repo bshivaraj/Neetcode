@@ -47,6 +47,32 @@ public class MyLinkedList<T> {
 		}
 		System.out.println(head.data);
 	}
+	public Node<Integer> mergeTwoSortedLinkedList(Node<Integer> n1, Node<Integer> n2) {
+		//merge
+		Node node =new Node(0);
+		Node curNode=node;
+		while(n1!=null && n2!=null) {
+			if(n1.data<=n2.data) {
+				curNode.next=n1;
+				n1=n1.next;
+			}else {
+				curNode.next=n2;
+				n2=n2.next;
+			}
+			curNode=curNode.next;
+		}
+		if(n1!=null) {
+			curNode.next=n1;
+			n1=n1.next;
+		}
+		if(n2!=null) {
+			curNode.next=n2;
+			n2=n2.next;
+		}
+		return node.next;
+	}
+
+
 
 
 
