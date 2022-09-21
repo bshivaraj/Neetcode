@@ -28,6 +28,7 @@ public class MyLinkedList<T> {
 		}
 		System.out.println(n.data);
 	}
+	
 
 	public void reverseList(){
 		Node currentNode=head;
@@ -70,6 +71,34 @@ public class MyLinkedList<T> {
 			n2=n2.next;
 		}
 		return node.next;
+	}
+
+	public void removeNthNode(int n) {
+		Node dummy=new Node(0);
+		dummy.next=head;
+		
+		Node slow=dummy;
+		Node fast=dummy;
+		
+		for(int i=1;i<=n+1;i++) {
+			fast=fast.next;
+		}
+		while(fast!=null) {
+			slow=slow.next;
+			fast=fast.next;
+		}
+		
+		slow.next=slow.next.next;
+	        Node n1=dummy.next;
+			System.out.println("--------Remove nth node linkedlist New world is creating-------");
+			while(n1.next!=null) {
+				System.out.println(n1.data);
+				n1=n1.next;
+			}
+			System.out.println(n1.data);
+	        
+	        
+		
 	}
 
 
