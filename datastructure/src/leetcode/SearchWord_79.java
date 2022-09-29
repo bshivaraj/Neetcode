@@ -4,7 +4,7 @@ public class SearchWord_79 {
 	
 	static boolean [][] visited;
 	public static void main(String[] args) {
-		String word="az";
+		String word="abe";
 		char[][] board= {{'a','b','c','e'},
 				         {'s','f','c','s'},
 				         {'a','d','e','e'}};
