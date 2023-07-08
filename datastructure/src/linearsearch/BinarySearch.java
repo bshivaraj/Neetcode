@@ -4,7 +4,7 @@ public class BinarySearch {
 	
 	public static void main(String[] args) {
 		int arr[]= {1,2,3,4,5,6,7,8,9,10,45,86};
-		int target=7,start=0,
+		int target=45,start=0,count=0,
 				end=arr.length-1,
 				mid=(arr.length)/2;
 		System.out.println(getNumber(arr,target,start,end,mid));
