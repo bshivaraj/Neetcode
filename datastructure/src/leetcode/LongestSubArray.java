@@ -3,7 +3,7 @@ package leetcode;
 public class LongestSubArray {
 	
 	public static void main(String[] args) {
-		int arr[]={1,2,3,7,5},sum=12;
+		int arr[]={1,2,3,4,5,6,7,8,9,10},sum=15;
 		int res[]=getBounderies(arr,sum);
 		System.out.println(res[0]+"  "+res[1]);
 	}
