@@ -1,0 +1,132 @@
+    sudo -s
+   
+    2  apt install docker.io
+    3  apt update
+    4  apt install docker.io
+    5  systemctl status docker
+    6  mkdir docker
+    7  cd docker/
+    8  vi app.py
+    9  vi Dockerfile
+   10  docker images
+   11  docker build -t first:1.0 .
+   12  docker images
+   13  docker ps
+   14  docker ps -a
+   15  docker run -d --name firstcontainer -p 8000:8080 first:1.0
+   16  docker ps
+   17  curl localhost:8000
+   18  curl ip.me
+   19  docker ps
+   20  docker ps -a
+   21  docker ps
+   22  ps -ef
+   23  docker ps 
+   24  docker run -d --name secondcontainer -p 8001:8080 first:1.0
+   25  docker ps
+   26  docker stats
+   
+   
+   pushing to docker hub
+   60   docker images
+   61  docker push first:1.0
+   62  docker tag first:1.0 shivarajb/first:1.0
+   63  docker images
+   64  docker push shivarajb/first:1.0
+   65  docker login
+   66  docker push rajendrait99/first:1.0
+   
+   
+   private image pushing
+   68  docker ps -a
+   69  docker stop firstcontainer
+   70  docker rm firstcontainer
+   71  docker ps -a
+   72  docker run -d --name registry -p 5000:5000 registry:2
+   73  docker ps -a
+   74  docker images
+   75  curl localhost:5000/v2/_catalog -> to check private repo
+   76  docker tag first:1.0 localhost:5000/first:1.0
+   77  docker images
+   78  docker push localhost:5000/first:1.0
+   79  curl localhost:5000/v2/_catalog
+   80  curl ip.me
+   81  docker ps -a
+   
+   82  history 
+   83  docker images
+   84  docker tag ubuntu:20.04 shivarajb/myubuntu:myversion
+   85  docker images
+   86  docker tag ubuntu:20.04 shivarajb/myubuntu
+   87  docker images
+   88  history 
+
+   mount volume 
+   89  docker ps
+   90  docker exec -it registry sh ->getting inside container
+   91  exit
+   92  cd
+   93  docker run -d --name first -p 8003:8080 first:1.0
+   94  docker ps -a
+   95  docker exec -it first bash
+   96  docker stop first && docker rm first
+   97  docker run -d --name first -p 8003:8080 first:1.0
+   98  docker exec -it first bash
+   99  docker stop first && docker rm first
+  100  ls /opt/
+  101  docker run -d --name first -p 8003:8080 -v /opt:/etc/lala   first:1.0
+  102  docker exec -it first bash
+  103  ls /opt/
+  104  docker stop first && docker rm first
+  105  ls /opt/
+  106  docker run -d --name first -p 8003:8080 -v /opt:/etc/lala   first:1.0
+  107  docker exec -it first bash
+
+
+  networking
+  110  docker ps -a
+  111  docker rm  registry first
+  112  ifconfig
+  113  apt install net-tools
+  114  docker network ls
+  115  ifconfig 
+  116  docker run -d --name first -p 8000:8080  first:1.0
+  117  ifconfig 
+  118  docker network ls
+  119  docker network inspect bridge
+  120  docker exec -it first bash
+  
+  
+  creating container in custom network
+   123  docker network ls
+  124  docker network inspect bridge
+  125  docker network ls
+  126  docker network create mynet --subnet=192.168.0.0/16
+  127  docker network ls
+  128  ifconfig 
+  129  docker network ls
+  130  docker network inspect mynet
+  131  docker run -d --name second -p 8001:8080  --network mynet  first:1.0
+  132  docker network inspect mynet
+
+
+
+
+
+FROM ubuntu:20.04
+RUN apt update && apt install python3 -y && apt install python3-flask -y
+COPY app.py /tmp
+EXPOSE 8080
+CMD ["python3", "/tmp/app.py"]
+
+
+from flask import Flask 
+import os 
+app = Flask(__name__) 
+@app.route('/') 
+
+def hello(): 
+    return ('\nHello from Container World! \n\n')
+
+if __name__ == "__main__": 
+    app.run(host="0.0.0.0", port=8080, debug=True)
