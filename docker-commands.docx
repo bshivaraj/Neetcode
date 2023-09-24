@@ -1,0 +1,2231 @@
+    sudo -s
+   
+    2  apt install docker.io
+    3  apt update
+    4  apt install docker.io
+    5  systemctl status docker
+    6  mkdir docker
+    7  cd docker/
+    8  vi app.py
+    9  vi Dockerfile
+   10  docker images
+   11  docker build -t first:1.0 .
+   12  docker images
+   13  docker ps
+   14  docker ps -a
+   15  docker run -d --name firstcontainer -p 8000:8080 first:1.0
+   16  docker ps
+   17  curl localhost:8000
+   18  curl ip.me
+   19  docker ps
+   20  docker ps -a
+   21  docker ps
+   22  ps -ef
+   23  docker ps 
+   24  docker run -d --name secondcontainer -p 8001:8080 first:1.0
+   25  docker ps
+   26  docker stats
+   
+   
+   pushing to docker hub
+   60   docker images
+   61  docker push first:1.0
+   62  docker tag first:1.0 shivarajb/first:1.0
+   63  docker images
+   64  docker push shivarajb/first:1.0
+   65  docker login
+   66  docker push rajendrait99/first:1.0
+   
+   
+   private image pushing
+   68  docker ps -a
+   69  docker stop firstcontainer
+   70  docker rm firstcontainer
+   71  docker ps -a
+   72  docker run -d --name registry -p 5000:5000 registry:2
+   73  docker ps -a
+   74  docker images
+   75  curl localhost:5000/v2/_catalog -> to check private repo
+   76  docker tag first:1.0 localhost:5000/first:1.0
+   77  docker images
+   78  docker push localhost:5000/first:1.0
+   79  curl localhost:5000/v2/_catalog
+   80  curl ip.me
+   81  docker ps -a
+   
+   82  history 
+   83  docker images
+   84  docker tag ubuntu:20.04 shivarajb/myubuntu:myversion
+   85  docker images
+   86  docker tag ubuntu:20.04 shivarajb/myubuntu
+   87  docker images
+   88  history 
+
+   mount volume 
+   89  docker ps
+   90  docker exec -it registry sh ->getting inside container
+   91  exit
+   92  cd
+   93  docker run -d --name first -p 8003:8080 first:1.0
+   94  docker ps -a
+   95  docker exec -it first bash
+   96  docker stop first && docker rm first
+   97  docker run -d --name first -p 8003:8080 first:1.0
+   98  docker exec -it first bash
+   99  docker stop first && docker rm first
+  100  ls /opt/
+  101  docker run -d --name first -p 8003:8080 -v /opt:/etc/lala   first:1.0
+  102  docker exec -it first bash
+  103  ls /opt/
+  104  docker stop first && docker rm first
+  105  ls /opt/
+  106  docker run -d --name first -p 8003:8080 -v /opt:/etc/lala   first:1.0
+  107  docker exec -it first bash
+
+
+  networking
+  110  docker ps -a
+  111  docker rm  registry first
+  112  ifconfig
+  113  apt install net-tools
+  114  docker network ls
+  115  ifconfig 
+  116  docker run -d --name first -p 8000:8080  first:1.0
+  117  ifconfig 
+  118  docker network ls
+  119  docker network inspect bridge
+  120  docker exec -it first bash
+  
+  
+  creating container in custom network
+   123  docker network ls
+  124  docker network inspect bridge
+  125  docker network ls
+  126  docker network create mynet --subnet=192.168.0.0/16
+  127  docker network ls
+  128  ifconfig 
+  129  docker network ls
+  130  docker network inspect mynet
+  131  docker run -d --name second -p 8001:8080  --network mynet  first:1.0
+  132  docker network inspect mynet
+
+  
+  compose file
+  136  docker
+  137  git clone https://github.com/rskTech/k8s_material.git
+  138  cd k8s_material/docker_compose/
+  139  ls
+  140  vi app.py 
+  141  vi requirements.txt 
+  142  vi Dockerfile 
+  143  vi app.py 
+  144  vi Dockerfile 
+  145  vi compose.yaml 
+  146  docker ps -a
+  147  docker rm first second
+  148  docker ps -a
+  149  docker images
+  150  docker rmi 043798dd7f7b  0030ba3d620c  6df894023726 -f
+  151  dockr images
+  152  docker images
+  153  docker-compose
+  154  apt  install docker-compose
+  155  docker-compose -f compose.yaml up -d
+  156  docker ps
+  157  curl localhost:80
+  158  docker-compose -f compose.yaml down
+  159  docker images
+  160  docker-compose -f compose.yaml up -d
+  161  docker ps
+  162  docker-compose -f compose.yaml down
+  163  docker images
+  164  docker rmi 8f8ef55a7406
+  165  vi compose.yaml 
+  166  docker-compose -f compose.yaml build
+  167  docker-compose -f compose.yaml push
+  168  vi compose.yaml 
+  
+  multi-docker
+   176  git clone https://github.com/rskTech/multi-stage-example.git
+  177  cd multi-stage-example/
+  178  ls
+  179  vi Dockerfile 
+  180  docker build -t image_without_multistage:1.0 .
+  181  docker images
+  182  vi Dockerfile 
+  183  docker build -t image_with_multistage:1.0 .
+  184  docker images
+  185  vi Dockerfile 
+  186  docker images
+  187  docker rmi 61c021de7f72  3bffb9cfb491
+  188  docker images
+  189  docker build -t image_with_multistage:1.0 .
+  190  docker images
+  191  history 
+  
+  cmd vd entrypoint
+  204  mkdir test
+  205  cd test/
+  206  vi Dockerfile
+  207  docker build -t test:1.0 .
+  208  docker run -d --name test test:1.0
+  209  docker logs test
+  210  docker rm test
+  211  docker run -d --name test test:1.0 echo "hello India"
+  212  docker logs test
+  213  vi Dockerfile 
+  214  docker build -t test:2.0 .
+  215  docker rm test
+  216  docker run -d --name test test:2.0
+  217  docker logs test
+  218  docker run -d --name test test:2.0 "hello India"
+  219  docker rm test
+  220  docker run -d --name test test:2.0 "hello India"
+  221  docker logs test
+  222  history 
+  223  vi Dockerfile 
+  
+  
+  Cluster
+  226  docker rm test
+  227  docker images
+  228  docker images | awk '{print $3}'
+  229  docker rmi `docker images | awk '{print $3}'`
+  230  docker images
+  231  cd
+  232  curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64
+  233  chmod +x ./kind
+  234  sudo mv ./kind /usr/local/bin/kind
+  235  kind
+  236  curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+  237  chmod +x ./kubectl
+  238  sudo mv ./kubectl /usr/local/bin/kubectl
+  239  kubectl
+  240  vi config
+  241  kind create cluster --config config 
+  242  docker ps
+  243  kubectl get nodes
+  244  vi config 
+  
+  ------------basic command-----------------
+  253  alias k=kubectl
+  254  k api-resources
+  255  k get po
+  256  k get po -n kube-system
+  257  k get po -n kube-system -o wide
+  258  k run first --image=rajendrait99/first:1.0 --port=8080
+  259  k get po
+  260  k delete po first
+  261  k run first --image=rajendrait99/first:1.0 --port=8080
+  262  k get po
+  263  k get po -o wide
+  264  k describe po first
+  265  k logs first
+  266  k exec -it first bash
+  267  k get po
+  268  k delete po first
+  269  k get po
+  
+  -------replica-------------------------
+  271  k create deploy mydeploy --image=shivarajb/first:1.0 --port=8080
+  272  k get all
+  273  k get deploy
+  274  k get rs
+  275  k get po
+  276  k delete po mydeploy-69f9d6bfc8-rnccq
+  277  k get po
+  278  k delete po mydeploy-69f9d6bfc8-wstcz
+  279  k get po
+  280  k get rs
+  281  k get all
+  282  k delete deploy mydeploy
+  283  k get all
+  284  k run first --image=shivarajb/first:1.0 --port=8080 --dry-run=client  -o yaml > pod.yaml
+  285  vi pod.yaml 
+  286  k create deploy mydeploy --image=shivarajb/first:1.0 --port=8080 --dry-run=client -o yaml > deploy.yaml
+  287  vi deploy.yaml 
+  288  k get all
+  289  k apply -f deploy.yaml 
+  290  k get all
+  291  k get po
+  292  k get po -o wide
+  293  k describe po mydeploy-7b864ff6c-5cjpl
+  294  k get all
+  295  k scale deploy mydeploy --replicas=10
+  296  k get all
+  297  k get po -o wide
+  298  k scale deploy mydeploy --replicas=2
+  299  k get po -o wide
+  300  vi deploy.yaml 
+  301  k apply -f deploy.yaml 
+  302  k get all
+  303  ls
+  304  k get all
+  305  k edit deploy mydeploy
+  306  k get all
+  
+  
+  308  k get all
+  309  k describe pod/mydeploy-7b864ff6c-zzltv
+  310  k get all
+  311  k rollout history deploy nginx
+  312  k rollout history deploy mydeploy
+  313  k rollout status deploy mydeploy
+  314  k set image deploy mydeploy first=nginx:1.8.1  --record
+  315  k rollout history deploy mydeploy
+  316  k rollout status deploy mydeploy
+  317  k get all
+  318  k rollout history deploy mydeploy
+  319  k set image deploy mydeploy first=nginx:1.9.1  --record
+  320  k rollout history deploy mydeploy
+  321  k get all
+  322  k rollout status deploy mydeploy
+  323  k get all
+  324  k describe pod/mydeploy-6889468dff-xxvf6
+  325  k rollout history deploy mydeploy
+  326  k rollout undo deploy mydeploy --to-revision=2
+  327  k rollout history deploy mydeploy
+  328  k get all
+  329  k rollout status deploy mydeploy
+  
+  
+
+  331  k rollout history deploy mydeploy --revision=1
+  332  k rollout history deploy mydeploy --revision=2
+  333  k rollout history deploy mydeploy --revision=3
+  334  k rollout history deploy mydeploy --revision=4
+  335  k rollout history deploy mydeploy
+  336  k get po
+  337  k describe po mydeploy-587cfd579b-zqwc6
+  338  k get all
+  339  k delete deploy mydeploy
+  340  k get all
+  341  k get no --show-labels
+  342  k label no kind-worker hdd=ssd
+  343  k get no --show-labels
+  344  vi pod.yaml 
+  345  k apply -f pod.yaml 
+  346  k get po
+  347  k get po -o wide
+  348  k delete po nginx
+  349  k delete po first
+  350  k label no kind-worker hdd-
+  351  k get no --show-labels
+  352  k apply -f pod.yaml 
+  353  k get po
+  354  k describe po  first
+  355  k delete po first
+  356  vi pod.yaml 
+  357  k get po
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: first
+  name: first
+spec:
+  nodeSelector:
+          hdd: ssd
+  containers:
+  - image: rajendrait99/first:1.0
+    name: first
+    ports:
+    - containerPort: 8080
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+ -----config
+  
+# three node (two workers) cluster config
+
+kind: Cluster
+
+apiVersion: kind.x-k8s.io/v1alpha4
+
+nodes:
+
+- role: control-plane
+
+- role: worker
+
+- role: worker
+
+  
+  
+  
+  
+  
+
+
+FROM openjdk:8-jdk-alpine as builder
+RUN mkdir -p /app/source
+COPY . /app/source
+WORKDIR /app/source
+RUN ./mvnw clean package
+#ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/source/target/app.jar"]
+
+
+FROM openjdk:8-jdk-alpine
+COPY --from=builder /app/source/target/*.jar /app/app.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.jar"]
+
+
+  
+  
+  
+  
+  
+version: "2"
+services:
+  web:
+    build: .
+    image: rajendrait99/compose:1.0
+    ports:
+      - "80:5000"
+    links:
+      - redis
+    networks:
+      - mynet
+  redis:
+    image: redis
+    expose:
+      - "6379"
+    networks:
+      - mynet
+networks:
+  mynet:
+
+
+
+
+
+FROM ubuntu:20.04
+RUN apt update && apt install python3 -y && apt install python3-flask -y
+COPY app.py /tmp
+EXPOSE 8080
+CMD ["python3", "/tmp/app.py"]
+
+
+from flask import Flask 
+import os 
+app = Flask(__name__) 
+@app.route('/') 
+
+def hello(): 
+    return ('\nHello from Container World! \n\n')
+
+if __name__ == "__main__": 
+    app.run(host="0.0.0.0", port=8080, debug=True)
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	-------------kube affinity-------------------------
+	
+  362  kind delete cluster
+  363  kind create cluster --config config 
+  364  alias k=kubectl
+  365  k get no
+  366  vi pod.yaml 
+  367  k explain po
+  368  k explain po.spec
+  369  k explain po.spec.affinity
+  370  k explain po.spec.affinity.nodeAffinity
+  371  k explain po.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution
+  372  k explain po.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms
+  373  k explain po.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms.matchExpressions
+  374  vi pod.yaml 
+  375  k get no --show-labels
+  376  k label no kind-worker hdd=ssd
+  377  k get no --show-labels
+  378  k apply -f pod.yaml 
+  379  k get po -o wide
+  
+  
+  
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: first
+  name: first
+spec:
+  affinity:
+          nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                          nodeSelectorTerms:
+                                  - matchExpressions:
+                                          - key: hdd
+                                            operator: In
+                                            values:
+                                                 - ssd
+  containers:
+  - image: rajendrait99/first:1.0
+    name: first
+    ports:
+    - containerPort: 8080
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+
+
+
+
+
+
+
+----------------------taint and toleration
+  381  cat pod.yaml 
+  382  ls
+  383  k get po
+  384  k get po --show-labels
+  385  k label po first hdd=ssd
+  386  k get po --show-labels
+  387  vi pod.yaml 
+  388  k get no
+  389  k describe no kind-control-plane
+  390  k describe no kind-worker
+  391  k describe no kind-worker2
+  392  k get no --show-labels
+  393  k label no kind-worker hdd-
+  394  k taint no kind-worker hdd=ssd:NoSchedule
+  395  k describe no kind-worker
+  396  k get no
+  397  k cordon kind-worker2
+  398  k get no
+  399  vi pod.yaml 
+  400  k apply -f pod.yaml 
+  401  k delete po first
+  402  k apply -f pod.yaml 
+  403  k get po
+  404  k describe po first
+  405  k delete po first
+  406  vi pod.yaml 
+  407  k apply -f pod.yaml 
+  408  k get po
+  409  k get po -o wide
+  
+  
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: first
+  name: first
+spec:
+  tolerations:
+          - key: hdd
+            operator: Equal
+            value: ssd
+            effect: NoSchedule
+  containers:
+  - image: rajendrait99/first:1.0
+    name: first
+    ports:
+    - containerPort: 8080
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+
+
+
+
+
+---------------demonset----------------
+  413  k get po -n kube-system
+  414  k get po -n kube-system -o wide
+  415  k get ds -n kube-system
+  416  k get no
+  417  k uncordon kind-worker2
+  418  k taint no kind-worker hdd-
+  419  vi ds.yaml
+  420  k apply -f ds.yaml 
+  421  k get ds
+  422  k get po
+  423  k get po -o wide
+  424  vi ds.yaml 
+
+
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-elasticsearch
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  selector:
+    matchLabels:
+      name: fluentd-elasticsearch
+  template:
+    metadata:
+      labels:
+        name: fluentd-elasticsearch
+    spec:
+      tolerations:
+      # these tolerations are to have the daemonset runnable on control plane nodes
+      # remove them if your control plane nodes should not run pods
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: fluentd-elasticsearch
+        image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
+		
+		
+		
+		
+		---------------------------Service object--------------------------
+		
+  430  git clone https://github.com/rskTech/serviceDemo.git
+  431  cd serviceDemo/
+  432  cd build/
+  433  ls
+  434  vi app.py 
+  435  cd ..
+  436  cd deploy/
+  437  vi db-pod.yml 
+  438  vi db-svc.yml 
+  439  vi db-pod.yml 
+  440  vi db-svc.yml 
+  441  k get all
+  442  k delete ds fluentd-elasticsearch
+  443  k delete po first
+  444  k get all
+  445  k apply -f db-pod.yml 
+  446  k get db-svc.yml 
+  447  k apply -f db-svc.yml 
+  448  k get all
+  449  vi web-pod.yaml 
+  450  k get all
+  451  k apply -f web-pod.yaml 
+  452  k get all
+  453  vi web-svc.yml 
+  454  k apply -f web-svc.yml 
+  455  k get all
+  456  k get no -o wide
+  457  curl 172.20.0.3:30699/init
+  458  curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "1", "user":"John Doe"}' http://172.21.0.3:32690/users/add
+  459  curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "2", "user":"Bob"}' http://172.21.0.3:32690/users/add
+  460  curl 172.21.0.3:32690/users/1
+  461  curl 172.21.0.3:32690/users/2
+  462  k get all
+  463  k delete po web1
+  464  k delete svc mysql
+  465  k get all
+  466  k apply -f web-pod.yaml 
+  467  k get po
+  468  k logs web1
+  469  k logs web1 -c python
+  
+  
+  
+  -------------------JOB-----------------------------------
+    471  cd
+  472  k create job myjob --image=ubuntu:20.04 --dry-run=client -o yaml -- /bin/sh -c "sleep 10" > job.yaml
+  473  vi job.yaml 
+  474  k get all
+  475  k delete po mysql web1
+  476  k delete svc web
+  477  k get all
+  478  k apply -f job.yaml 
+  479  watch kubectl get all
+  480  k create deploy mydeploy --image=ubuntu:20.04 --dry-run=client -o yaml -- /bin/sh -c "sleep 10" > mydeploy.yaml
+  481  vi mydeploy.yaml 
+  482  k apply -f mydeploy.yaml 
+  483  k get all
+  484  watch kubectl get all
+  485  k delete deploy mydeploy
+  486  k get all
+  487  k delete job mujob
+  488  k delete job myjob
+  489  vi job.yaml 
+  490  k apply -f job.yaml 
+  491  watch kubectl get all
+  492  k delete job myjob
+  493  vi job.yaml 
+  494  k apply -f job.yaml 
+  495  watch kubectl get all
+  
+  
+  
+apiVersion: batch/v1
+kind: Job
+metadata:
+  creationTimestamp: null
+  name: myjob
+spec:
+  completions: 10
+  parallelism: 3
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - sleep 10
+        image: ubuntu:20.04
+        name: myjob
+        resources: {}
+      restartPolicy: Never
+status: {}
+
+
+--------------------------cron job--------------
+  498  k create cj  mycj --image=ubuntu:20.04 --schedule="*/1 * * * *" --dry-run=client -o yaml -- /bin/sh -c "sleep 10" > cronjob.yaml
+  499  vi cronjob.yaml 
+  500  k delete job myjob
+  501  k apply -f cronjob.yaml 
+  502  watch kubectl get all
+  503  vi cronjob.yaml 
+  504  cat cronjob.yaml 
+
+
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  creationTimestamp: null
+  name: mycj
+spec:
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+      name: mycj
+    spec:
+      completions: 3
+      parallelism: 2
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - command:
+            - /bin/sh
+            - -c
+            - sleep 10
+            image: ubuntu:20.04
+            name: mycj
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: '*/1 * * * *'
+status: {}
+
+
+
+---------------cube config---------------
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: first
+  name: first
+spec:
+  containers:
+  - image: rajendrait99/first:1.0
+    name: first
+    ports:
+    - containerPort: 8080
+    resources: {}
+    env:
+          - name: LOGFILE
+            valueFrom:
+                    configMapKeyRef:
+                            name: mycm
+                            key: logfile
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+
+  507  k get cm
+  508  k create cm mycm --from-literal=logfile=myapp.log --from-literal=dbhost=192.168.0.5
+  509  k describe cm mycm
+  510  vi pod.yaml 
+  511  k get po
+  512  k get all
+  513  k delete cj mycj
+  514  k get all
+  515  k apply -f pod.yaml 
+  516  k get po
+  517  k get po 
+  518  k exec -it first bash
+
+  
+  
+  
+  
+  
+  
+  
+  
+  521  k exec -it first bash
+  522  vi myconfig.ini
+  523  k create cm mycm1 --from-file=myconfig.ini 
+  524  k describe cm mycm1
+  525  vi pod.yaml 
+  526  k delete po first
+  527  k apply -f pod.yaml 
+  528  k get po
+  529  k exec -it first bas
+  
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: first
+  name: first
+spec:
+  containers:
+  - image: rajendrait99/first:1.0
+    name: first
+    ports:
+    - containerPort: 8080
+    resources: {}
+    volumeMounts:
+            - name: myvol
+              mountPath: /etc/lala
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+          - name: myvol
+            configMap:
+                    name: mycm1
+status: {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  k create secret generic mysecret --from-literal=logfile=myapp.log --from-literal=dbhost=192.168.0.5
+  
+  
+  
+  
+  env:
+  - name: dbpass
+    valueFrom:
+       secretKeyRef:
+         name: mysecret
+         key: dbpass
+  
+  521  k exec -it first bash
+  522  vi myconfig.ini
+  523  k create cm mycm1 --from-file=myconfig.ini 
+  524  k describe cm mycm1
+  525  vi pod.yaml 
+  526  k delete po first
+  527  k apply -f pod.yaml 
+  528  k get po
+  529  k exec -it first bas
+  
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: first
+  name: first
+spec:
+  containers:
+  - image: rajendrait99/first:1.0
+    name: first
+    ports:
+    - containerPort: 8080
+    resources: {}
+    volumeMounts:
+            - name: myvol
+              mountPath: /etc/lala
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+          - name: myvol
+            configMap:
+                    name: mycm1
+status: {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------volume-------------------
+   534  k describe cm mycm
+  535  k describe secret mysecret
+  536  vi pod.yaml 
+  537  vi ~/.kube/config 
+  538  vi pv.yaml
+  539  k get pv
+  540  k apply -f pv.yaml 
+  541  k get pv
+  542  cp pv.yaml pvc.yaml
+  543  vi pvc.yaml 
+  544  k get pv
+  545  k apply -f pvc.yaml 
+  546  k get pv
+  547  k get pvc
+  548  vi pod.yaml 
+  549  k get all
+  550  k delete po first
+  551  k apply -f pod.yaml 
+  552  k exec -it first bash
+
+
+root@ip-172-31-88-238:~# cat pv.yaml 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+        name: mypv
+spec:
+    accessModes:
+            - ReadWriteMany
+    storageClassName: normal
+    capacity:
+            storage: 1G
+    hostPath:
+            path: /opt
+
+
+root@ip-172-31-88-238:~# cat pvc.yaml 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+        name: mypvc
+spec:
+    accessModes:
+            - ReadWriteMany
+    storageClassName: normal
+    resources:
+            requests:
+              storage: 1G
+
+
+root@ip-172-31-88-238:~# cat pod.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: first
+  name: first
+spec:
+  containers:
+  - image: rajendrait99/first:1.0
+    name: first
+    ports:
+    - containerPort: 8080
+    resources: {}
+    volumeMounts:
+            - name: myvol
+              mountPath: /etc/lala
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+          - name: myvol
+            persistentVolumeClaim:
+                    claimName: mypvc
+status: {}
+
+
+
+
+
+
+
+
+---------------memory-------------------
+  557  docker stats
+  558  vi pvc.yaml 
+  559  vi pod.yaml 
+  560  k delete po first
+  561  k apply -f pod.yaml 
+  562  k describe po first
+  563  k describe no kind-worker
+  564  k get po
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: first
+  name: first
+spec:
+  containers:
+  - image: rajendrait99/first:1.0
+    name: first
+    ports:
+    - containerPort: 8080
+    resources: 
+      requests:
+              memory: 500M
+      limits:
+              memory: 600M
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------------cluster config--------------------
+  573  kind delete cluster
+  574  kind create cluster --config config 
+  575  alias k=kubectl
+  576  k get no
+  577  vi ~/.kube/config 
+  578  kind create cluster --name mycluster
+  579  docker ps
+  580  vi ~/.kube/config 
+  581  k get no
+  582  k config -h
+  583  k config get-contexts
+  584  k config use-context kind-kind
+  585  k config get-contexts
+  586  k get no
+  587  vi ~/.kube/config 
+  588  k config -h
+
+
+------------------certificate--------------------
+   590  vi ~/.kube/config 
+  591  cat  ~/.kube/config 
+  592  k get no
+  593  kind delete cluster --name mycluster
+  594  k get no
+  595  vi ~/.kube/config 
+  596  mkdir mycerts
+  597  cd mycerts/
+  598  openssl genrsa -out john.key 2048
+ 
+  627  openssl req -new -key john.key -out john.csr -subj "/CN=john/O=examplegroup"
+  628  ls
+  629  cat john.csr 
+  630  openssl x509 -req -in john.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key  -CAcreateserial -out john.crt
+  631  docker ps
+  632  docker cp kind-control-plane:/etc/kubernetes/pki/ca.crt .
+  633  docker cp kind-control-plane:/etc/kubernetes/pki/ca.key .
+  634  openssl x509 -req -in john.csr -CA ca.crt -CAkey ca.key  -CAcreateserial -out john.crt
+  635  vi john.crt 
+  636  pwd
+  637  k config set-credentials john --client-certificate=/home/lab-user/mycerts/john.crt --client-key=/root/mycerts/john.key 
+  638  vi ~/.kube/config 
+  639  vi role.yaml
+  640  k apply -f role.yaml 
+  641  vi ~/.kube/config 
+  642  k apply -f role.yaml 
+  643  k get role
+  644  k create rolebinding myrolebinding --role=myrole --user=john
+  645  k get po
+  646  k run nginx --image=nginx --port=80
+  647  k get po
+  648  k config use-context mycontext
+  649  k get po
+  650  k run first --image=nginx --port=80
+  651  vi role.yaml 
+  652  k get rolebinding
+  653  k config use-context kind-kind
+  654  k get rolebinding
+  655  k describe rolebinding myrolebinding
+  656  k describe role myrole
+  657  k get role
+  658  k get role -n kube-system
+  659  vi ~/.kube/config 
+  
+apiVersion: rbac.authorization.k8s.io/v1
+
+kind: Role
+
+metadata:
+
+        name: myrole
+
+        namespace: default
+
+rules:
+
+    - apiGroups: [""]
+
+      resources: ["pods"]
+
+      verbs: ["list", "watch", "get"]
+
+	  
+	  
+	  
+	  
+---------------------quatota memory-------------------	  
+  662  k get all
+  663  k delete po nginx
+  664  k get ns
+  665  k create ns myns
+  666  k get ns
+  667  vi rq.yaml
+  668  k config use-context kind-kind
+  669  k apply -f rq.yaml 
+  670  k get rq -n myns
+  671  k get quota -n myns
+  672  k run nginx --image=nginx --port=80 --dry-run=client -o yaml > pod.yaml
+  673  vi pod.yaml 
+  674  k apply -f pod.yaml 
+  675  k get po -n myns
+  676  k get quota -n myns
+  677  cp pod.yaml pod1.yaml 
+  678  vi pod1.yaml 
+  679  k apply -f pod1.yaml
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: myns
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources:
+      requests:
+        cpu: 0.1m
+        memory: 300M
+      limits:
+        cpu: 0.1m
+        memory: 300M
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+        name: myquota
+        namespace: myns
+spec:
+    hard:
+        cpu: 0.3m
+        memory: 500M
+        pods: 3
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		----------------------------Ingress deployment----------------------------------------
+		
+		  684  cd k8s_material/ingress
+  685  ls
+  686  wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+  687  mv deploy.yaml.1 deploy.yaml
+  688  vi deploy.yaml 
+  689  k get all
+  690  k apply -f deploy.yaml 
+  691  k get all -n ingress-nginx
+  692  k edit deploy ingress-nginx-controller  -n ingress-nginx
+  693  k get all -n ingress-nginx
+  694  vi pod.yaml
+  695  k apply -f pod.yaml 
+  696  k get po
+  697  vi svc.yaml
+  698  k apply -f svc.yaml 
+  699  k get all
+  700  curl 172.20.0.3:32151
+  701  curl 172.20.0.3:32151/hostname
+  702  vi pod1.yaml
+  703  k apply -f pod1.yaml 
+  704  vi svc1.yaml
+  705  k apply -f svc1.yaml 
+  706  k get all
+  707  curl 172.20.0.3:31385/hostname
+  708  vi ingress.yaml
+  709  k apply -f ingress.yaml 
+  710  k get po
+  711  k get ingress
+  712  curl 172.20.0.4/foo
+  713  curl 172.20.0.4/foo/hostname
+  714  curl 172.20.0.4/bar/hostname
+  715  curl 172.20.0.4/abc/hostname
+  716  vi ingress.yaml 
+  717  curl 172.20.0.4/abc/hostname11
+  718  curl 172.20.0.4/abc/hostname
+  719  curl 172.20.0.4/bar/hostname
+  720  curl 172.20.0.4/bar/hostname11
+  
+  
+  
+  
+  
+root@ip-172-31-88-238:~/k8s_material/ingress# cat deploy.yaml 
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+  name: ingress-nginx
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx
+  namespace: ingress-nginx
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-admission
+  namespace: ingress-nginx
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx
+  namespace: ingress-nginx
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - pods
+  - secrets
+  - endpoints
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses/status
+  verbs:
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingressclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - coordination.k8s.io
+  resourceNames:
+  - ingress-nginx-leader
+  resources:
+  - leases
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - list
+  - watch
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-admission
+  namespace: ingress-nginx
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - endpoints
+  - nodes
+  - pods
+  - secrets
+  - namespaces
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses/status
+  verbs:
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingressclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - list
+  - watch
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-admission
+rules:
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - validatingwebhookconfigurations
+  verbs:
+  - get
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx
+  namespace: ingress-nginx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ingress-nginx
+subjects:
+- kind: ServiceAccount
+  name: ingress-nginx
+  namespace: ingress-nginx
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-admission
+  namespace: ingress-nginx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ingress-nginx-admission
+subjects:
+- kind: ServiceAccount
+  name: ingress-nginx-admission
+  namespace: ingress-nginx
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ingress-nginx
+subjects:
+- kind: ServiceAccount
+  name: ingress-nginx
+  namespace: ingress-nginx
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-admission
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ingress-nginx-admission
+subjects:
+- kind: ServiceAccount
+  name: ingress-nginx-admission
+  namespace: ingress-nginx
+---
+apiVersion: v1
+data:
+  allow-snippet-annotations: "false"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+spec:
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - appProtocol: http
+    name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  - appProtocol: https
+    name: https
+    port: 443
+    protocol: TCP
+    targetPort: https
+  selector:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-controller-admission
+  namespace: ingress-nginx
+spec:
+  ports:
+  - appProtocol: https
+    name: https-webhook
+    port: 443
+    targetPort: webhook
+  selector:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+spec:
+  minReadySeconds: 0
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: ingress-nginx
+      app.kubernetes.io/name: ingress-nginx
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/instance: ingress-nginx
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/part-of: ingress-nginx
+        app.kubernetes.io/version: 1.9.0-beta.0
+    spec:
+      containers:
+      - args:
+        - /nginx-ingress-controller
+        - --election-id=ingress-nginx-leader
+        - --controller-class=k8s.io/ingress-nginx
+        - --ingress-class=nginx
+        - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
+        - --validating-webhook=:8443
+        - --validating-webhook-certificate=/usr/local/certificates/cert
+        - --validating-webhook-key=/usr/local/certificates/key
+        - --watch-ingress-without-class=true
+        - --publish-status-address=localhost
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: LD_PRELOAD
+          value: /usr/local/lib/libmimalloc.so
+        image: registry.k8s.io/ingress-nginx/controller:v1.9.0-beta.0@sha256:531377e4cc9dc62af40d742402222603259673f5a755a64d74122f256dfad8f9
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /wait-shutdown
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: controller
+        ports:
+        - containerPort: 80
+          hostPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          hostPort: 443
+          name: https
+          protocol: TCP
+        - containerPort: 8443
+          name: webhook
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 90Mi
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+            - NET_BIND_SERVICE
+            drop:
+            - ALL
+          runAsUser: 101
+        volumeMounts:
+        - mountPath: /usr/local/certificates/
+          name: webhook-cert
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      serviceAccountName: ingress-nginx
+      terminationGracePeriodSeconds: 0
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Equal
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+        operator: Equal
+      volumes:
+      - name: webhook-cert
+        secret:
+          secretName: ingress-nginx-admission
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-admission-create
+  namespace: ingress-nginx
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: admission-webhook
+        app.kubernetes.io/instance: ingress-nginx
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/part-of: ingress-nginx
+        app.kubernetes.io/version: 1.9.0-beta.0
+      name: ingress-nginx-admission-create
+    spec:
+      containers:
+      - args:
+        - create
+        - --host=ingress-nginx-controller-admission,ingress-nginx-controller-admission.$(POD_NAMESPACE).svc
+        - --namespace=$(POD_NAMESPACE)
+        - --secret-name=ingress-nginx-admission
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20230407@sha256:543c40fd093964bc9ab509d3e791f9989963021f1e9e4c9c7b6700b02bfb227b
+        imagePullPolicy: IfNotPresent
+        name: create
+        securityContext:
+          allowPrivilegeEscalation: false
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: OnFailure
+      securityContext:
+        fsGroup: 2000
+        runAsNonRoot: true
+        runAsUser: 2000
+      serviceAccountName: ingress-nginx-admission
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-admission-patch
+  namespace: ingress-nginx
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: admission-webhook
+        app.kubernetes.io/instance: ingress-nginx
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/part-of: ingress-nginx
+        app.kubernetes.io/version: 1.9.0-beta.0
+      name: ingress-nginx-admission-patch
+    spec:
+      containers:
+      - args:
+        - patch
+        - --webhook-name=ingress-nginx-admission
+        - --namespace=$(POD_NAMESPACE)
+        - --patch-mutating=false
+        - --secret-name=ingress-nginx-admission
+        - --patch-failure-policy=Fail
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20230407@sha256:543c40fd093964bc9ab509d3e791f9989963021f1e9e4c9c7b6700b02bfb227b
+        imagePullPolicy: IfNotPresent
+        name: patch
+        securityContext:
+          allowPrivilegeEscalation: false
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: OnFailure
+      securityContext:
+        fsGroup: 2000
+        runAsNonRoot: true
+        runAsUser: 2000
+      serviceAccountName: ingress-nginx-admission
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: nginx
+spec:
+  controller: k8s.io/ingress-nginx
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  labels:
+    app.kubernetes.io/component: admission-webhook
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.9.0-beta.0
+  name: ingress-nginx-admission
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: ingress-nginx-controller-admission
+      namespace: ingress-nginx
+      path: /networking/v1/ingresses
+  failurePolicy: Fail
+  matchPolicy: Equivalent
+  name: validate.nginx.ingress.kubernetes.io
+  rules:
+  - apiGroups:
+    - networking.k8s.io
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - ingresses
+  sideEffects: None
+
+
+
+
+root@ip-172-31-88-238:~/k8s_material/ingress# cat pod.yaml 
+kind: Pod
+
+apiVersion: v1
+
+metadata:
+
+  name: foo-app
+
+  labels:
+
+    app: foo
+
+spec:
+
+  containers:
+
+  - command:
+
+    - /agnhost
+
+    - netexec
+
+    - --http-port
+
+    - "8080"
+
+    image: registry.k8s.io/e2e-test-images/agnhost:2.39
+
+    name: foo-app
+    
+======================svc.yaml-----------------
+    
+kind: Service
+
+apiVersion: v1
+
+metadata:
+
+  name: foo-service
+
+spec:
+  type: NodePort
+  selector:
+
+    app: foo
+
+  ports:
+
+  # Default port used by the image
+
+  - port: 8080
+
+
+
+root@ip-172-31-88-238:~/k8s_material/ingress# cat pod1.yaml 
+kind: Pod
+
+apiVersion: v1
+
+metadata:
+
+  name: bar-app
+
+  labels:
+
+    app: bar
+
+spec:
+
+  containers:
+
+  - command:
+
+    - /agnhost
+
+    - netexec
+
+    - --http-port
+
+    - "8080"
+
+    image: registry.k8s.io/e2e-test-images/agnhost:2.39
+
+    name: bar-app
+    
+    
+root@ip-172-31-88-238:~/k8s_material/ingress# cat svc.yaml 
+kind: Service
+
+apiVersion: v1
+
+metadata:
+
+  name: foo-service
+
+spec:
+  type: NodePort
+  selector:
+
+    app: foo
+
+  ports:
+
+  # Default port used by the image
+
+  - port: 8080
+
+
+
+root@ip-172-31-88-238:~/k8s_material/ingress# cat ingress.yaml 
+apiVersion: networking.k8s.io/v1
+
+kind: Ingress
+
+metadata:
+
+  name: example-ingress
+
+  annotations:
+
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+spec:
+
+  rules:
+
+  - http:
+
+      paths:
+
+      - pathType: Prefix
+
+        path: /foo(/|$)(.*)
+
+        backend:
+
+          service:
+
+            name: foo-service
+
+            port:
+
+              number: 8080
+
+      - pathType: Prefix
+
+        path: /bar(/|$)(.*)
+
+        backend:
+
+          service:
+
+            name: bar-service
+
+            port:
+
+              number: 8080
+			  
+			  
+			  
+-------------------Readless and liveless------------------------------------------			  
+
+ 738  k explain po.spec.containers.readinessProbe
+  739  cd
+  740  vi pod.yaml 
+  741  k get all
+  742  k delete po bar-app foo-app
+  743  k delete svc foo-service bar-service
+  744  k get all
+  745  k apply -f pod.yaml 
+  746  k get po
+  747  vi pod.yaml 
+  748  k apply -f pod.yaml 
+  749  k get po
+  750  k describe po  first
+  751  vi pod.yaml 
+  752  k delete po first
+  753  k apply -f pod.yaml 
+  754  k get po
+  755  k exec -it first bash
+  756  vi pod.yaml 
+  757  k describe po first
+  758  vi pod.yaml 
+
+
+
+
+/healthz
+
+
+curl localhost/healthz
+
+
+
+
+
+
+
+
+
+-------------------------
+  761  snap install helm
+  762  snap install helm --classic
+  763  helm
+  764  helm create myapp
+  765  cd my
+  766  cd myapp/
+  767  ls
+  768  vi Chart.yaml 
+  769  rm values.yaml 
+  770  ls charts/
+  771  rm -rf charts/
+  772  cd templates/
+  773  rm -rf *
+  774  cp ~/deploy.yaml ~/serviceDemo/deploy/db-svc.yml .
+  775  ls
+  776  mv db-svc.yml service.yaml
+  777  ls
+  778  vi deploy.yaml 
+  779  vi ../values.yaml
+  780  vi deploy.yaml 
+  781  vi ../values.yaml
+  782  vi deploy.yaml 
+  783  vi service.yaml 
+  784  vi deploy.yaml 
+  785  vi service.yaml 
+  786  vi ../values.yaml
+  787  cd ..
+  788  helm template myapp myapp/
+  789  helm list
+  790  helm install  myapp myapp/
+  791  helm list
+  792  k get all
+  793  curl 172.20.0.3:31587
+  794  helm uninstall myapp
+  795  k get all
+  796  k delete po first
+  797  helm install  myapp myapp/
+  798  k get all
+  799  cp -R myapp/ yourapp
+  800  cd yourapp/
+  801  vi values.yaml 
+  802  helm list
+  803  vi Chart.yaml 
+  804  cd ..
+  805  helm install yourapp yourapp/
+  806  k get all
+  807  curl 172.20.0.3:30009
+
+
+
+
+root@ip-172-31-88-238:~/myapp# cat values.yaml 
+app:
+    name: myapp
+    image: nginx:latest
+    port: 80
+    replicas: 5
+    type: NodePort
+
+
+
+root@ip-172-31-88-238:~/myapp/templates# cat deploy.yaml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: {{.Values.app.name}}
+  name: {{.Values.app.name}}
+spec:
+  replicas: {{.Values.app.replicas}}
+  selector:
+    matchLabels:
+      app: {{.Values.app.name}}
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: {{.Values.app.name}}
+    spec:
+      containers:
+      - image: {{.Values.app.image}}
+        name: {{.Values.app.name}}
+        ports:
+        - containerPort: {{.Values.app.port}}
+        resources: {}
+status: {}
+
+
+root@ip-172-31-88-238:~/myapp/templates# cat service.yaml 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.app.name}}
+  labels:
+    name: {{.Values.app.name}}
+spec:
+  ports:
+  - port: {{.Values.app.port}}
+    name: mysql
+    targetPort: {{.Values.app.port}}
+  type: {{.Values.app.type}}
+  selector:
+       app: {{.Values.app.name}}
+
