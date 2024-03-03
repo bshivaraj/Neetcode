@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class MaximumSubarray {
 	
     public static void main(String[] args) {
-		int nums[]={-2,-1};
+    	 int nums[]= {-9,13,-12,89};
 		System.out.println(getResult(nums));
 	}
 

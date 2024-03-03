@@ -4,6 +4,7 @@ public class Kadane
     public static void main (String[] args)
     {
         int [] a = {-3,4,-5,6,-4,7,-3,6,-20,18};
+        
         System.out.println("Maximum contiguous sum is " +
                                        maxSubArraySum(a));
     }
