@@ -1,4 +1,4 @@
-package dsimplemenattion;
+package BFS;
 
 import java.util.LinkedList;
 import java.util.Queue;
